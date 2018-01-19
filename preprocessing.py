@@ -30,15 +30,15 @@ except:
 	os.system('wget' + ' ./data/' + opt.data + '.mat' + ' ' + opt.url1)
 	os.system('wget' + ' ./data/' + opt.data + '.mat' + ' ' + opt.url2)
 	input_mat = io.loadmat('./data/' + opt.data + '.mat')[opt.data.lower()]
-	target_mat = io.loadmat('./data/' + opt.data + '_gt.mat')[opt.data.lower() + '_gt']	
+	target_mat = io.loadmat('./data/' + opt.data + '_gt.mat')[opt.data.lower() + '_gt']
 PATCH_SIZE = opt.patch_size
 HEIGHT = input_mat.shape[0]
 WIDTH = input_mat.shape[1]
 BAND = input_mat.shape[2]
-CLASSES = [] 
+CLASSES = []
 COUNT = 200 #Number of patches of each class
 OUTPUT_CLASSES = np.max(target_mat)
-print OUTPUT_CLASSES
+print(OUTPUT_CLASSES)
 
 
 if opt.data == "Indian_Pines":
@@ -68,15 +68,15 @@ elif opt.data == "PaviaU":
 
 def Patch(height_index,width_index):
     """
-    Returns a mean-normalized patch, the top left corner of which 
+    Returns a mean-normalized patch, the top left corner of which
     is at (height_index, width_index)
-    
-    Inputs: 
+
+    Inputs:
     height_index - row index of the top left corner of the image patch
     width_index - column index of the top left corner of the image patch
-    
+
     Outputs:
-    mean_normalized_patch - mean normalized patch of size (PATCH_SIZE, PATCH_SIZE) 
+    mean_normalized_patch - mean normalized patch of size (PATCH_SIZE, PATCH_SIZE)
     whose top left corner is at (height_index, width_index)
     """
 #     transpose_array = np.transpose(input_mat,(2,0,1))
@@ -87,8 +87,8 @@ def Patch(height_index,width_index):
     patch = transpose_array[:, height_slice, width_slice]
     mean_normalized_patch = []
     for i in range(patch.shape[0]):
-        mean_normalized_patch.append(patch[i] - MEAN_ARRAY[i]) 
-    
+        mean_normalized_patch.append(patch[i] - MEAN_ARRAY[i])
+
     return np.array(mean_normalized_patch)
 
 
@@ -103,8 +103,8 @@ for i in range(BAND):
         new_input_mat.append(np.pad(input_mat[i,:,:],PATCH_SIZE/2,'constant',constant_values = 0))
     except:
         new_input_mat = input_mat
-    
-print np.array(new_input_mat).shape
+
+print(np.array(new_input_mat).shape)
 
 input_mat = np.array(new_input_mat)
 
@@ -121,7 +121,7 @@ for i in range(HEIGHT):
         if(curr_tar!=0): #Ignore patches with unknown landcover type for the central pixel
             CLASSES[curr_tar-1].append(curr_inp)
             count += 1
-print count
+print(count)
 
 
 TRAIN_PATCH,TRAIN_LABELS,TEST_PATCH,TEST_LABELS,VAL_PATCH, VAL_LABELS = [],[],[],[],[],[]
@@ -171,24 +171,23 @@ train = {}
 train["train_patch"] = TRAIN_PATCH
 train["train_labels"] = TRAIN_LABELS
 scipy.io.savemat("./data/" + opt.data + "_Train_patch_" + str(PATCH_SIZE) + ".mat", train)
-print TRAIN_PATCH.shape
+print(TRAIN_PATCH.shape)
 
 
 test = {}
 test["test_patch"] = TEST_PATCH
 test["test_labels"] = TEST_LABELS
 scipy.io.savemat("./data/" + opt.data + "_Test_patch_" + str(PATCH_SIZE) + ".mat", test)
-print TEST_PATCH.shape
+print(TEST_PATCH.shape)
 
 val = {}
 val["val_patch"] = VAL_PATCH
 val["val_labels"] = VAL_LABELS
 scipy.io.savemat("./data/" + opt.data + "_Val_patch_" + str(PATCH_SIZE) + ".mat", val)
-print VAL_PATCH.shape
+print(VAL_PATCH.shape)
 
 full_train = {}
 full_train["train_patch"] = FULL_TRAIN_PATCH
 full_train["train_labels"] = FULL_TRAIN_LABELS
 scipy.io.savemat("./data/" + opt.data + "_Full_Train_patch_" + str(PATCH_SIZE) + ".mat", full_train)
-print FULL_TRAIN_LABELS.shape
-
+print(FULL_TRAIN_LABELS.shape)
