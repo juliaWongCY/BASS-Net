@@ -10,7 +10,7 @@ require 'math'
 local opt = lapp[[
    --path_dir         (default "./data/")            Path to the data directory
    -d, --data         (default "Indian_pines")       Dataset to use
-   --development      (default 1)                    Use development dataset/ Whole training dataset 
+   --development      (default 1)                    Use development dataset/ Whole training dataset
    -s,--save          (default "logs/")               subdirectory to save logs
    -p,--plot                                         plot while training
    -o,--optimization  (default "Adam")               optimization: SGD | LBFGS | Adam
@@ -22,7 +22,7 @@ local opt = lapp[[
    --coefL2           (default 0)                    L2 penalty on the weights
    -t,--type          (default "cpu")                GPU or CPU
    --network          (default "MLP")                MLP or CNN
-   --patch_size       (default 3)                    patch size of tthe image
+   --patch_size       (default 3)                    patch size of the image
    --nbands           (default 10)                   number of bands
    --block1_conv1     (default 3333)                 number of filters in the 1*1 convolution (here, 3333 is the sentinel value)
 ]]
@@ -266,7 +266,7 @@ function train(dataset)
             lineSearch = optim.lswolfe
          }
          optim.lbfgs(feval, parameters, lbfgsState)
-       
+
          -- disp report:
          print('LBFGS step')
          print(' - progress in batch: ' .. t .. '/' .. dataset:size())
@@ -297,7 +297,7 @@ function train(dataset)
          error('unknown optimization method')
       end
    end
-   
+
    -- time taken
    time = sys.clock() - time
    time = time / dataset:size()
@@ -328,9 +328,9 @@ function val(dataset)
             targets[k] = target
             k = k+1
         end
-        
+
         local preds = net:forward(inputs) -- Computing Loss
-        for l = 1, k - 1 do 
+        for l = 1, k - 1 do
             confusion:add(preds[l], targets[l])
         end
     end
@@ -343,7 +343,7 @@ function val(dataset)
     confusion:zero()
     net:training()
 
-end     
+end
 
 best_test = 0
 function test(dataset)
@@ -363,9 +363,9 @@ function test(dataset)
             targets[k] = target
             k = k+1
         end
-        
+
         local preds = net:forward(inputs) -- Computing Loss
-        for l = 1, k - 1 do 
+        for l = 1, k - 1 do
             confusion:add(preds[l], targets[l])
         end
     end
@@ -379,7 +379,7 @@ function test(dataset)
     confusion:zero()
     net:training()
 
-end     
+end
 
 
 for i = 1, opt.maxIter do
