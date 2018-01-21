@@ -21,12 +21,16 @@ elif opt.data == "PaviaU":
 	opt.url1 = "http://www.ehu.eus/ccwintco/uploads/e/ee/PaviaU.mat"
 	opt.url2 = "http://www.ehu.eus/ccwintco/uploads/5/50/PaviaU_gt.mat"
 
+firstLetterLower = lambda s: s[0].lower() + s[1:] if s else ''
+
 
 ##loading images for input and target image
 try:
 	print("inside try")
-	input_mat = io.loadmat('./data/' + opt.data + '.mat')[opt.data.lower()]
-	target_mat = io.loadmat('./data/' + opt.data + '_gt.mat')[opt.data.lower() + '_gt']
+	# input_mat = io.loadmat('./data/' + opt.data + '.mat')[opt.data.lower()]
+	# target_mat = io.loadmat('./data/' + opt.data + '_gt.mat')[opt.data.lower() + '_gt']
+	input_mat = io.loadmat('./data/' + opt.data + '.mat')[firstLetterLower(opt.data)]
+	target_mat = io.loadmat('./data/' + opt.data + '_gt.mat')[firstLetterLower(opt.data) + '_gt']
 except:
 	print("insdie except")
 	# os.system('wget ' + ' ./data/' + opt.data + '.mat' + ' ' + opt.url1)
@@ -38,8 +42,9 @@ except:
 	os.system('wget -P' + ' ' + './data/' + ' ' + opt.url1)
 	os.system('wget -P' + ' ' + './data/' + ' ' + opt.url2)
 	# os.system('wget --output-document="' + '/data/' + opt.data + '.mat' + ' ' + opt.url2)
-	input_mat = io.loadmat('./data/' + opt.data + '.mat')[opt.data.lower()]
-	target_mat = io.loadmat('./data/' + opt.data + '_gt.mat')[opt.data.lower() + '_gt']
+	print(io.loadmat('./data/' + opt.data + '.mat'))
+	input_mat = io.loadmat('./data/' + opt.data + '.mat')[firstLetterLower(opt.data)]
+	target_mat = io.loadmat('./data/' + opt.data + '_gt.mat')[firstLetterLower(opt.data) + '_gt']
 PATCH_SIZE = opt.patch_size
 HEIGHT = input_mat.shape[0]
 WIDTH = input_mat.shape[1]
