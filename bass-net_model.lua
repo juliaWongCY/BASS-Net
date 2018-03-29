@@ -40,6 +40,7 @@ else
   nval = 0
 end
 
+-- The expected number of output labels
 if opt.data == "Salinas" then
   opt.nclasses = 16
 else
@@ -49,11 +50,14 @@ end
 
 -- Loading Data
 
+-- Loading the testing set
 test_data = matio.load(opt.path_dir .. opt.data .. "_Test_patch_" .. tostring(opt.patch_size) .. ".mat").test_patch
 test_labels = matio.load(opt.path_dir ..opt.data .. "_Test_patch_" .. tostring(opt.patch_size) .. ".mat").test_labels:transpose(1,2)
 opt.channels = test_data:size(2)
+--Loading the trainign set
 train_data = matio.load(opt.path_dir ..opt.data .. opt.dev .. "_Train_patch_" .. tostring(opt.patch_size) .. ".mat").train_patch:reshape(opt.nclasses*200-nval, opt.channels, opt.patch_size, opt.patch_size)
 train_labels = matio.load(opt.path_dir ..opt.data .. opt.dev .. "_Train_patch_" .. tostring(opt.patch_size) .. ".mat").train_labels:transpose(1,2)
+--Loading the validation set
 val_data = matio.load(opt.path_dir ..opt.data .. "_Val_patch_" .. tostring(opt.patch_size) .. ".mat").val_patch
 val_labels = matio.load(opt.path_dir ..opt.data .. "_Val_patch_" .. tostring(opt.patch_size) .. ".mat").val_labels:transpose(1, 2)
 
@@ -128,7 +132,11 @@ opt.band_size = opt.block1_conv1/opt.nbands
 model = nn.Sequential()
 
 model:add(nn.Reshape(opt.band_size, opt.patch_size*opt.patch_size))
+-- nn.Temportalconvolution(inputFrameSize, outputFramesize, kW (kernel width of the conv), [dW] (step of conv, default as 1))
+-- conv_xy - p,n
+-- nn.TemporalConvolution(inputFrameSize (patch_size from input x patch_size from input), n, p, dW)
 model:add(nn.TemporalConvolution(opt.patch_size*opt.patch_size, 20, 3, 1))
+print("patch_size * patch_size: " .. opt.patch_size*opt.patch_size)
 model:add(nn.ReLU())
 model:add(nn.TemporalConvolution(20, 20, 3, 1))
 model:add(nn.ReLU())

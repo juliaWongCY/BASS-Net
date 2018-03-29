@@ -146,7 +146,7 @@ for i, data in enumerate(CLASSES):
 	if i+1 in list_labels:
 		shuffle(data)
 		TRAIN_PATCH += data[:train_idx[count]]
-		# print('Train_patch: ', len(TRAIN_PATCH[0][0][0]))
+		print('Train_patch: ', len(TRAIN_PATCH[i]))
 		TRAIN_LABELS += [count]*train_idx[count]
 		VAL_PATCH += data[train_idx[count]:200]
 		VAL_LABELS += [count]*(200-train_idx[count])
@@ -158,6 +158,7 @@ FULL_TRAIN_LABELS = TRAIN_LABELS + VAL_LABELS
 FULL_TRAIN_PATCH = TRAIN_PATCH + VAL_PATCH
 
 TRAIN_LABELS = np.array(TRAIN_LABELS)
+# print('train_patch: ' , TRAIN_PATCH)
 TRAIN_PATCH = np.array(TRAIN_PATCH)
 TEST_PATCH = np.array(TEST_PATCH)
 TEST_LABELS = np.array(TEST_LABELS)
